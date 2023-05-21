@@ -2,6 +2,7 @@ from detector import process_hands, check_fingers, get_models
 import numpy as np
 import time
 import cv2
+from handler import *
 
 
 wCam, hCam = 320, 240 # webcam resuloution
@@ -25,12 +26,14 @@ cap.set(4, hCam)
 
 detector, pose_estimator = get_models()
 
+client = initialize_client()
+
 while True:
     # 1. Find hand Landmarks
     fingers = [0, 0, 0, 0, 0]
     # success, img = cap.read()
     points, bbox = process_hands(img, detector, pose_estimator, draw=True)
-
+    x1, y1, x2, y2 = 0, 0, 0, 0
     # 2. Get the tip of the index and middle fingers
     if len(points) != 0:
         x1, y1 = points[8][1:3]
@@ -40,9 +43,6 @@ while True:
     # 3. Check which fingers are up
     fingers = check_fingers(points)
 
-    if fingers == [1, 0, 1, 1, 1]:
-        print('Yep')
-        # Todo: Send signal to the system ...
-    else:
-        pass
+    handle_gesture(fingers, client, co1=(x1, y1), co2=(x2, y2))
+
 
