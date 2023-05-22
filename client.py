@@ -16,8 +16,8 @@ class Command(Enum):
 
 class Client:
     def __init__(self) -> None:
-        self.camera_width = 320
-        self.camera_height = 240
+        self.camera_width = 224
+        self.camera_height = 224
         self.screen_width, self.screen_height = pyautogui.size()
         self.x_mid = self.screen_width // 2
         self.y_mid = self.screen_height // 2

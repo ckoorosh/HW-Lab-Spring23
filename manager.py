@@ -1,48 +1,53 @@
-from detector import process_hands, check_fingers, get_models
 import numpy as np
 import time
 import cv2
+from detector import *
 from handler import *
 
 
-wCam, hCam = 320, 240 # webcam resuloution
-frameR = 50
-smoothening = 7
-
-pTime = 0
-plocX, plocY = 0, 0
-clocX, clocY = 0, 0
-mouseDown = False
-clicked = False
-rclicked = False
-dclicked = False
-last_pos_scroll = -1
-
-last_ss = time.time_ns()
-
-cap = cv2.VideoCapture(0)
-cap.set(3, wCam)
-cap.set(4, hCam)
-
-detector, pose_estimator = get_models()
-
-client = initialize_client()
-
-while True:
-    # 1. Find hand Landmarks
-    fingers = [0, 0, 0, 0, 0]
-    success, img = cap.read()
-    points, bbox = process_hands(img, detector, pose_estimator, draw=True)
-    x1, y1, x2, y2 = 0, 0, 0, 0
-    # 2. Get the tip of the index and middle fingers
-    if len(points) != 0:
-        x1, y1 = points[8][1:3]
-        x2, y2 = points[12][1:3]
-        # print(x1, y1, x2, y2)
-
-    # 3. Check which fingers are up
-    fingers = check_fingers(points)
-
-    handle_gesture(fingers, client, co1=(x1, y1), co2=(x2, y2))
+MODEL_CHECKPOINT = '/checkpoints/model.tflite'
 
 
+class Manager:
+    def __init__(self) -> None:
+        self.camera_width = 224
+        self.camera_height = 224
+        self.frame_rate = 50
+        self.smoothening = 7
+
+        self.pTime = 0
+        self.plocX, self.plocY = 0, 0
+        self.clocX, self.clocY = 0, 0
+        self.mouseDown = False
+        self.clicked = False
+        self.rclicked = False
+        self.dclicked = False
+        self.last_pos_scroll = -1
+
+        self.last_ss = time.time_ns()
+
+        self.capture = cv2.VideoCapture(0)
+        self.capture.set(3, self.camera_width)
+        self.capture.set(4, self.camera_height)
+
+        self.detector = Detector(MODEL_CHECKPOINT)
+        self.client = initialize_client()
+
+    def start(self):
+        while True:
+            fingers = [0, 0, 0, 0, 0]
+            _, image = self.capture.read()
+            keypoints, bbox = self.detector.process_hands(image, draw=True)
+            x1, y1 = 0, 0
+
+            if len(keypoints) != 0:
+                x1, y1 = keypoints[0]
+                # print(x1, y1)
+
+            fingers = self.detector.check_fingers(keypoints)
+            handle_gesture(fingers, self.client, co1=(x1, y1))
+
+
+if __name__ == "__main__":
+    manager = Manager()
+    manager.start()

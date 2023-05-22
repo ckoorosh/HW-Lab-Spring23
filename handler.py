@@ -19,7 +19,7 @@ def initialize_client():
     return client
 
 
-def handle_gesture(gesture, client, co1=(0, 0), co2=(0, 0)):
+def handle_gesture(gesture, client, co1=(0, 0)):
     # move mouse
     if gesture == [0, 1, 0, 0, 0]:
         data = {'type': Command.MOVE, 'x': co1[0], 'y': co1[1]}
