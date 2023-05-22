@@ -24,15 +24,16 @@ class Client:
         self.smoothening = 7
         self.frame_rate = 30
         pyautogui.PAUSE = 0.02
-        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client_socket.connect(('localhost', 12345))
-        print("Connected to server successfully")
+        # self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # self.server_socket.bind(('localhost', 12345))
+        # self.client_socket.connect(('localhost', 12345))
+        # print("Connected to server successfully")
 
-    def get_data(self):
+    def get_data(self, connection):
         '''
         Get the command from server socket
         '''
-        data = self.client_socket.recv(1024).decode()
+        data = connection.recv(1024).decode()
         if data:
             print(data)
             return json.loads(data)
@@ -68,10 +69,15 @@ class Client:
 
 
     def start(self):
-        while True:
-            data = self.get_data()
-            if data is not None:
-                self.run(data)
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
+            server_socket.bind(('localhost', 12345))
+            connection, address = self.server_socket.accept()
+            with connection:
+                print(f"Connected by {address}")
+                while True:
+                    data = self.get_data(connection)
+                    if data is not None:
+                        self.run(data)
 
 
 if __name__ == "__main__":

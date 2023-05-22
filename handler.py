@@ -22,7 +22,7 @@ class Handler:
 
     def initialize_client(self):
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client.connect(('localhost', self.port))
+        client.connect(('localhost', self.port)) # 5.208.214.153
         print('Connected to server')
         self.client = client
 
