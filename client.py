@@ -34,6 +34,7 @@ class Client:
         '''
         data = self.client_socket.recv(1024).decode()
         if data:
+            print(data)
             return json.loads(data)
         else:
             return None
@@ -60,8 +61,8 @@ class Client:
             elif data['type'] == Command.RIGHT_CLICK:
                 pyautogui.rightClick()
             elif data['type'] == Command.SCROLL_UP:
-                up = int(data['direction'] == 'up')
-                pyautogui.scroll(-up * 10)
+                offset = -int(data['offset']) * 10
+                pyautogui.scroll(offset)
         else:
             pass
 

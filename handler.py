@@ -10,39 +10,63 @@ class Command(Enum):
     SCROLL_UP = 5
 
 
-port = 12345
+class Handler:
+    def __init__(self) -> None:
+        self.port = 12345
+        # self.mouse_down = False
+        self.clicked = False
+        self.right_clicked = False
+        self.double_clicked = False
+        self.last_scroll = -1
 
-def initialize_client():
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect(('localhost', port))
-    print('Connected to server')
-    return client
+
+    def initialize_client(self):
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client.connect(('localhost', self.port))
+        print('Connected to server')
+        self.client = client
 
 
-def handle_gesture(gesture, client, co1=(0, 0)):
-    # move mouse
-    if gesture == [0, 1, 0, 0, 0]:
-        data = {'type': Command.MOVE, 'x': co1[0], 'y': co1[1]}
-        client.send(json.dumps(data).encode('utf-8'))
-        print("Move mouse case")
-    # click
-    elif gesture == [0, 1, 1, 0, 0]:
-        data = {'type': Command.CLICK}
-        client.send(json.dumps(data).encode('utf-8'))
-        print("Click case")
-    # double click
-    elif gesture == [1, 1, 0, 0, 0]:
-        data = {'type': Command.DOUBLE_CLICK}
-        client.send(json.dumps(data).encode('utf-8'))
-        print("Double click case")
-    # right click
-    elif gesture == [1, 1, 1, 0, 0]:
-        data = {'type': Command.RIGHT_CLICK}
-        client.send(json.dumps(data).encode('utf-8'))
-        print("Right click case")
-    # scroll up
-    elif gesture == [1, 1, 1, 1, 1]:
-        data = {'type': Command.SCROLL_UP, 'direction': 'up'}
-        client.send(json.dumps(data).encode('utf-8'))
-        print("Scroll up case")
+    def handle_gesture(self, gesture, co1=(0, 0)):
+        # move mouse
+        if gesture == [0, 1, 0, 0, 0]:
+            data = {'type': Command.MOVE, 'x': co1[0], 'y': co1[1]}
+            self.client.send(json.dumps(data).encode('utf-8'))
+            print("Move mouse case")
+        # click
+        elif gesture == [0, 1, 1, 0, 0]:
+            if not self.clicked:
+                data = {'type': Command.CLICK}
+                self.client.send(json.dumps(data).encode('utf-8'))
+                print("Click case")
+            else:
+                self.clicked = False
+        # double click
+        elif gesture == [1, 1, 0, 0, 0]:
+            if not self.double_clicked:
+                data = {'type': Command.DOUBLE_CLICK}
+                self.client.send(json.dumps(data).encode('utf-8'))
+                print("Double click case")
+            else:
+                self.double_clicked = False
+        # right click
+        elif gesture == [1, 1, 1, 0, 0]:
+            if not self.right_clicked:
+                data = {'type': Command.RIGHT_CLICK}
+                self.client.send(json.dumps(data).encode('utf-8'))
+                print("Right click case")
+            else:
+                self.right_clicked = False
+        # scroll up
+        elif gesture == [1, 1, 1, 1, 1]:
+            if self.last_scroll == -1:
+                self.last_scroll = co1[1]
+            elif abs(last_pos_scroll - co1[1]) > 10:
+                    offset = int((self.last_scroll - co1[1]))
+                    last_pos_scroll = co1[1]
+                    data = {'type': Command.SCROLL_UP, 'offset': offset}
+                    self.client.send(json.dumps(data).encode('utf-8'))
+                    print("Scroll up case")
+        else:
+            self.last_scroll = -1
 

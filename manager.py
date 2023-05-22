@@ -15,23 +15,12 @@ class Manager:
         self.frame_rate = 30
         self.smoothening = 7
 
-        self.pTime = 0
-        self.plocX, self.plocY = 0, 0
-        self.clocX, self.clocY = 0, 0
-        self.mouseDown = False
-        self.clicked = False
-        self.rclicked = False
-        self.dclicked = False
-        self.last_pos_scroll = -1
-
-        self.last_ss = time.time_ns()
-
         self.stream = cv2.VideoCapture(0)
         self.stream.set(3, self.camera_width)
         self.stream.set(4, self.camera_height)
 
         self.detector = Detector(MODEL_CHECKPOINT)
-        self.client = initialize_client()
+        self.handler = Handler()
 
     def start(self):
         while True:
@@ -45,7 +34,7 @@ class Manager:
                 # print(x1, y1)
 
             fingers = self.detector.check_fingers(keypoints)
-            handle_gesture(fingers, self.client, co1=(x1, y1))
+            self.handler.handle_gesture(fingers, co1=(x1, y1))
 
 
 if __name__ == "__main__":
