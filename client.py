@@ -1,5 +1,7 @@
 import pyautogui
 from enum import Enum
+import numpy as np
+
 
 class Command(Enum):
     MOVE = 1
@@ -9,30 +11,59 @@ class Command(Enum):
     SCROLL_UP = 5
 
 
-def get_data():
-    '''
-    Get the command from server socket
-    '''
-    pass
+class Client:
+    def __init__(self) -> None:
+        self.camera_width = 320 
+        self.camera_height = 240
+        self.screen_width, self.screen_height = pyautogui.size()
+        self.x_mid = self.screen_width // 2
+        self.y_mid = self.screen_height // 2
+        self.smoothening = 7
+        self.frame_rate = 50
+        pyautogui.PAUSE = 0.02
 
 
-def run(data: dict):
-    if 'type' in data:
-        if data['type'] == Command.MOVE:
-            pass
-        elif data['type'] == Command.CLICK:
-            pass
-        elif data['type'] == Command.DOUBLE_CLICK:
-            pass
-        elif data['type'] == Command.RIGHT_CLICK:
-            pass
-        elif data['type'] == Command.SCROLL_UP:
-            pass
-    else:
+    def get_data(self):
+        '''
+        Get the command from server socket
+        '''
         pass
 
 
-while True:
-    data = get_data()
-    if data:
-        run(data)
+    def move_curser(self, x, y):
+        x1 = np.interp(x, (self.frame_rate, self.camera_width - self.frame_rate), (0, self.screen_width))
+        y1 = np.interp(y, (self.frame_rate, self.camera_height - self.frame_rate), (0, self.screen_height))
+        
+        x2 = self.x_mid + (x1 - self.x_mid) / self.smoothening
+        y2 = self.y_mid + (y1 - self.y_mid) / self.smoothening
+        
+        pyautogui.moveTo(self.screen_width - x2, y2)
+
+
+    def run(self, data: dict):
+        if 'type' in data:
+            if data['type'] == Command.MOVE:
+                self.move_curser(data['x'], data['y'])
+            elif data['type'] == Command.CLICK:
+                pyautogui.click()
+            elif data['type'] == Command.DOUBLE_CLICK:
+                pyautogui.doubleClick()
+            elif data['type'] == Command.RIGHT_CLICK:
+                pyautogui.rightClick()
+            elif data['type'] == Command.SCROLL_UP:
+                up = int(data['direction'] == 'up')
+                pyautogui.scroll(-up * 10)
+        else:
+            pass
+
+
+    def start(self):
+        while True:
+            data = self.get_data()
+            if data:
+                self.run(data)
+
+
+if __name__ == "__main__":
+    client = Client()
+    client.start()
