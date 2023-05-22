@@ -12,7 +12,7 @@ class Manager:
     def __init__(self) -> None:
         self.camera_width = 224
         self.camera_height = 224
-        self.frame_rate = 50
+        self.frame_rate = 30
         self.smoothening = 7
 
         self.pTime = 0
@@ -26,9 +26,9 @@ class Manager:
 
         self.last_ss = time.time_ns()
 
-        self.capture = cv2.VideoCapture(0)
-        self.capture.set(3, self.camera_width)
-        self.capture.set(4, self.camera_height)
+        self.stream = cv2.VideoCapture(0)
+        self.stream.set(3, self.camera_width)
+        self.stream.set(4, self.camera_height)
 
         self.detector = Detector(MODEL_CHECKPOINT)
         self.client = initialize_client()
@@ -36,7 +36,7 @@ class Manager:
     def start(self):
         while True:
             fingers = [0, 0, 0, 0, 0]
-            _, image = self.capture.read()
+            _, image = self.stream.read()
             keypoints, bbox = self.detector.process_hands(image, draw=True)
             x1, y1 = 0, 0
 

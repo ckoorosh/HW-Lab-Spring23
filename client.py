@@ -22,7 +22,7 @@ class Client:
         self.x_mid = self.screen_width // 2
         self.y_mid = self.screen_height // 2
         self.smoothening = 7
-        self.frame_rate = 50
+        self.frame_rate = 30
         pyautogui.PAUSE = 0.02
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.connect(('localhost', 12345))
