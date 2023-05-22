@@ -2,6 +2,8 @@ import pyautogui
 from enum import Enum
 import numpy as np
 from tkinter import messagebox
+import socket
+import json
 
 
 class Command(Enum):
@@ -22,19 +24,24 @@ class Client:
         self.smoothening = 7
         self.frame_rate = 50
         pyautogui.PAUSE = 0.02
-
+        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client_socket.connect(('localhost', 12345))
+        print("Connected to server successfully")
 
     def get_data(self):
         '''
         Get the command from server socket
         '''
-        pass
-
+        data = self.client_socket.recv(1024).decode()
+        if data:
+            return json.loads(data)
+        else:
+            return None
 
     def move_curser(self, x, y):
         x1 = np.interp(x, (self.frame_rate, self.camera_width - self.frame_rate), (0, self.screen_width))
         y1 = np.interp(y, (self.frame_rate, self.camera_height - self.frame_rate), (0, self.screen_height))
-        
+
         x2 = self.x_mid + (x1 - self.x_mid) / self.smoothening
         y2 = self.y_mid + (y1 - self.y_mid) / self.smoothening
 
@@ -62,7 +69,7 @@ class Client:
     def start(self):
         while True:
             data = self.get_data()
-            if data:
+            if data is not None:
                 self.run(data)
 
 
