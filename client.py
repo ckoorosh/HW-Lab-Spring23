@@ -1,6 +1,7 @@
 import pyautogui
 from enum import Enum
 import numpy as np
+from tkinter import messagebox
 
 
 class Command(Enum):
@@ -13,7 +14,7 @@ class Command(Enum):
 
 class Client:
     def __init__(self) -> None:
-        self.camera_width = 320 
+        self.camera_width = 320
         self.camera_height = 240
         self.screen_width, self.screen_height = pyautogui.size()
         self.x_mid = self.screen_width // 2
@@ -36,7 +37,7 @@ class Client:
         
         x2 = self.x_mid + (x1 - self.x_mid) / self.smoothening
         y2 = self.y_mid + (y1 - self.y_mid) / self.smoothening
-        
+
         pyautogui.moveTo(self.screen_width - x2, y2)
 
 
@@ -46,6 +47,7 @@ class Client:
                 self.move_curser(data['x'], data['y'])
             elif data['type'] == Command.CLICK:
                 pyautogui.click()
+                messagebox.showinfo("Clicked", "You clicked!")
             elif data['type'] == Command.DOUBLE_CLICK:
                 pyautogui.doubleClick()
             elif data['type'] == Command.RIGHT_CLICK:
