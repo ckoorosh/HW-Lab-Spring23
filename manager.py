@@ -31,7 +31,7 @@ client = initialize_client()
 while True:
     # 1. Find hand Landmarks
     fingers = [0, 0, 0, 0, 0]
-    # success, img = cap.read()
+    success, img = cap.read()
     points, bbox = process_hands(img, detector, pose_estimator, draw=True)
     x1, y1, x2, y2 = 0, 0, 0, 0
     # 2. Get the tip of the index and middle fingers
