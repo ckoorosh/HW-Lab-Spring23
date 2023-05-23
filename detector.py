@@ -52,6 +52,7 @@ class Detector:
         self.model.set_tensor(self.input_details[0]['index'], image)
         self.model.invoke()
         y_pred = self.model.get_tensor(self.output_details[0]['index'])
+        y_pred = np.squeeze(y_pred, axis=0)
         return self.find_fingers(y_pred)
 
 
