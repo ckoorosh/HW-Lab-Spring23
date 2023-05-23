@@ -23,7 +23,7 @@ class Detector:
     def process_hands(self, image, draw=False):
         keypoints = self.get_keypoints(image)
 
-        for keypoint in enumerate(keypoints):
+        for keypoint in keypoints:
             cx, cy = int(keypoint[0]), int(keypoint[1])
             if draw:
                 cv2.circle(image, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
