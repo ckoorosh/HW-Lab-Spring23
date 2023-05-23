@@ -93,7 +93,7 @@ class Detector:
         return np.array(fingers)
 
 
-    def check_fingers(points):
+    def check_fingers(self, points):
         fingers = []
         
         # todo
