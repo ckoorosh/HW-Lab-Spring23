@@ -71,7 +71,7 @@ class Detector:
         X = (ind[1] + X) * cell_size
         Y = (ind[0] + Y) * cell_size
 
-        return X, Y
+        return [X, Y]
 
 
     def find_fingers(self, y_pred):
