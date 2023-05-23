@@ -71,7 +71,9 @@ class Detector:
         X = (ind[1] + X) * cell_size
         Y = (ind[0] + Y) * cell_size
 
-        return [X, Y]
+        points = [X, Y]
+
+        return points
 
 
     def find_fingers(self, y_pred):
@@ -88,7 +90,7 @@ class Detector:
         for i in range(self.num_fingers):
             fingers.append(self.find_finger(p_pred[:, :, i], xy_pred[:, :, i, 0], xy_pred[:, :, i, 1]))
 
-        return fingers
+        return np.array(fingers)
 
 
     def check_fingers(points):
