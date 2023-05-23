@@ -44,7 +44,7 @@ class Detector:
         # image = tf.image.decode_jpeg(image, channels=3)
         # image = tf.image.convert_image_dtype(image, tf.float32)
         # image = tf.image.resize_with_pad(image, self.input_size, self.input_size)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB).astype(np.float32)
         image = cv2.resize(image, (self.input_size, self.input_size))
         image = (image - 127.5) / 127.5
         image = np.expand_dims(image, axis=0)
