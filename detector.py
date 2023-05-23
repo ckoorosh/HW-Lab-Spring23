@@ -35,7 +35,7 @@ class Detector:
 
         if draw:
             cv2.rectangle(image, (xmin - 20, ymin - 20), (xmax + 20, ymax + 20), (0, 255, 0), 2)
-            cv2.imwrite('test.jpg', image)
+            cv2.imwrite('./results/test.jpg', image)
 
         return keypoints, bbox
     
