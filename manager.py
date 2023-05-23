@@ -5,7 +5,9 @@ from detector import *
 from handler import *
 
 
-MODEL_CHECKPOINT = '/checkpoints/model.tflite'
+MODEL_CHECKPOINT = './checkpoints/model.tflite'
+
+image_path = './sample/1402.jpg'
 
 
 class Manager:
@@ -25,16 +27,19 @@ class Manager:
     def start(self):
         while True:
             fingers = [0, 0, 0, 0, 0]
-            _, image = self.stream.read()
+            # _, image = self.stream.read()
+            image = cv2.imread(image_path)
             keypoints, bbox = self.detector.process_hands(image, draw=True)
             x1, y1 = 0, 0
 
             if len(keypoints) != 0:
                 x1, y1 = keypoints[0]
-                # print(x1, y1)
+                print(x1, y1)
 
             fingers = self.detector.check_fingers(keypoints)
             self.handler.handle_gesture(fingers, co1=(x1, y1))
+
+            break
 
 
 if __name__ == "__main__":

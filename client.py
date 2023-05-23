@@ -16,6 +16,7 @@ class Command(Enum):
 
 class Client:
     def __init__(self) -> None:
+        self.port = 12345
         self.camera_width = 224
         self.camera_height = 224
         self.screen_width, self.screen_height = pyautogui.size()
@@ -70,8 +71,10 @@ class Client:
 
     def start(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
-            server_socket.bind(('localhost', 12345))
-            connection, address = self.server_socket.accept()
+            server_socket.bind(('127.0.0.1', self.port))
+            server_socket.listen()
+            print(f'Server is listening at port {self.port}')
+            connection, address = server_socket.accept()
             with connection:
                 print(f"Connected by {address}")
                 while True:

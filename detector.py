@@ -38,14 +38,21 @@ class Detector:
             cv2.imwrite('test.jpg', image)
 
         return keypoints, bbox
+    
+    
+    def get_keypoints(self, image):
+        # image = tf.image.decode_jpeg(image, channels=3)
+        # image = tf.image.convert_image_dtype(image, tf.float32)
+        # image = tf.image.resize_with_pad(image, self.input_size, self.input_size)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = cv2.resize(image, (self.input_size, self.input_size))
+        image = (image - 127.5) / 127.5
+        image = np.expand_dims(image.numpy(), axis=0)
 
-
-    def check_fingers(points):
-        fingers = []
-        
-        # todo
-
-        return fingers
+        self.model.set_tensor(self.input_details[0]['index'], image)
+        self.model.invoke()
+        y_pred = self.model.get_tensor(self.output_details[0]['index'])
+        return self.find_fingers(y_pred)
 
 
     def find_finger(self, P, X, Y, img_size=224, k=7):
@@ -83,20 +90,12 @@ class Detector:
         return fingers
 
 
-    def get_keypoints(self, image):
-        # image = tf.image.decode_jpeg(image, channels=3)
-        # image = tf.image.convert_image_dtype(image, tf.float32)
-        # image = tf.image.resize_with_pad(image, self.input_size, self.input_size)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        image = cv2.resize(image, (self.input_size, self.input_size))
-        image = (image - 127.5) / 127.5
-        image = np.expand_dims(image.numpy(), axis=0)
+    def check_fingers(points):
+        fingers = []
+        
+        # todo
 
-        self.model.set_tensor(self.input_details[0]['index'], image)
-        self.model.invoke()
-        y_pred = self.model.get_tensor(self.output_details[0]['index'])
-        return self.find_fingers(y_pred)
-
+        return fingers
         
 
 

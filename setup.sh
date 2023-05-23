@@ -9,4 +9,4 @@ sudo apt-get install libatlas-base-dev gfortran libhdf5-dev libhdf5-serial-dev l
 pip install --default-timeout=100 opencv-python
 
 # Get packages required for TensorFlow
-pip install tflite-runtime
+pip install https://github.com/google-coral/pycoral/releases/download/v2.0.0/tflite_runtime-2.5.0.post1-cp39-cp39-linux_aarch64.whl
