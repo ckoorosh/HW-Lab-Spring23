@@ -7,7 +7,7 @@ class Command(Enum):
     CLICK = 2
     DOUBLE_CLICK = 3
     RIGHT_CLICK = 4
-    SCROLL_UP = 5
+    SCROLL = 5
 
 
 class Handler:
@@ -57,16 +57,16 @@ class Handler:
                 print("Right click case")
             else:
                 self.right_clicked = False
-        # scroll up
+        # scroll
         elif gesture == [1, 1, 1, 1, 1]:
             if self.last_scroll == -1:
                 self.last_scroll = co1[1]
             elif abs(last_pos_scroll - co1[1]) > 10:
                     offset = int((self.last_scroll - co1[1]))
                     last_pos_scroll = co1[1]
-                    data = {'type': Command.SCROLL_UP, 'offset': offset}
+                    data = {'type': Command.SCROLL, 'offset': offset}
                     self.client.send(json.dumps(data).encode('utf-8'))
-                    print("Scroll up case")
+                    print("Scroll case")
         else:
             self.last_scroll = -1
 

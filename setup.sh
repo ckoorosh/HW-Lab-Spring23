@@ -1,11 +1,16 @@
 #!/bin/bash
 
 # Get packages required for OpenCV
-sudo apt-get -y install libjpeg-dev libtiff5-dev libjasper-dev libpng12-dev
-sudo apt-get -y install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
-sudo apt-get -y install libxvidcore-dev libx264-dev
-sudo apt-get -y install qt4-dev-tools 
-sudo apt-get -y install libatlas-base-dev
+# sudo apt-get -y install libjpeg-dev libtiff5-dev libjasper-dev libpng12-dev
+# sudo apt-get -y install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
+# sudo apt-get -y install libxvidcore-dev libx264-dev
+# sudo apt-get -y install qt4-dev-tools 
+# sudo apt-get -y install libatlas-base-dev
+sudo apt-get install build-essential cmake pkg-config libjpeg-dev libtiff5-dev -y
+sudo apt-get install libjasper-dev libpng-dev libavcodec-dev libavformat-dev libswscale-dev -y
+sudo apt-get install libv4l-dev libxvidcore-dev libx264-dev libfontconfig1-dev libcairo2-dev -y
+sudo apt-get install libgdk-pixbuf2.0-dev libpango1.0-dev libgtk2.0-dev libgtk-3-dev -y
+sudo apt-get install libatlas-base-dev gfortran libhdf5-dev libhdf5-serial-dev libhdf5-103 python3-pyqt5 python3-dev -y
 
 # Need to get an older version of OpenCV because version 4 has errors
 pip3 install opencv-python==3.4.11.41
