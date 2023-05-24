@@ -25,6 +25,7 @@ class Manager:
         self.handler = Handler()
 
     def start(self):
+        self.handler.initialize_client()
         while True:
             fingers = [0, 0, 0, 0, 0]
             # _, image = self.stream.read()
