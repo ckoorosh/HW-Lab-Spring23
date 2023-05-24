@@ -27,9 +27,8 @@ class Handler:
             server_socket.listen(1)
             print(f'Server is listening at port {self.port}')
             connection, address = server_socket.accept()
-            with connection:
-                print(f"Connected by {address}")
-                self.client = connection
+            print(f"Connected by {address}")
+            self.client = connection
 
 
     def handle_gesture(self, gesture, co1=(0, 0)):

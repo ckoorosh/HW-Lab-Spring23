@@ -60,9 +60,10 @@ class Detector:
         ind = np.unravel_index(np.argmax(P, axis=None), P.shape)
         P = P[ind]
 
-        thresh = 0.2
+        thresh = -10
         if P < thresh:
-            return -1, -1
+            points = [-1, -1]
+            return points
 
         X, Y = X[ind], Y[ind]
 
