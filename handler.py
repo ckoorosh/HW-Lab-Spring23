@@ -1,8 +1,8 @@
 import socket
 import json
-from enum import Enum
+from enum import IntEnum
 
-class Command(int, Enum):
+class Command(IntEnum):
     MOVE = 1
     CLICK = 2
     DOUBLE_CLICK = 3
