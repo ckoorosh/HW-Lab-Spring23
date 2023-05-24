@@ -18,13 +18,18 @@ class Handler:
         self.right_clicked = False
         self.double_clicked = False
         self.last_scroll = -1
+        self.initialize_server()
 
 
-    def initialize_client(self):
-        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client.connect(('127.0.0.1', self.port)) # 5.208.214.153
-        print('Connected to server')
-        self.client = client
+    def initialize_server(self):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
+            server_socket.bind(('127.0.0.1', self.port))
+            server_socket.listen(1)
+            print(f'Server is listening at port {self.port}')
+            connection, address = server_socket.accept()
+            with connection:
+                print(f"Connected by {address}")
+                self.client = connection
 
 
     def handle_gesture(self, gesture, co1=(0, 0)):

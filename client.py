@@ -30,11 +30,11 @@ class Client:
         # self.client_socket.connect(('localhost', 12345))
         # print("Connected to server successfully")
 
-    def get_data(self, connection):
+    def get_data(self):
         '''
         Get the command from server socket
         '''
-        data = connection.recv(1024).decode()
+        data = self.client_socket.recv(1024).decode()
         if data:
             print(data)
             return json.loads(data)
@@ -70,17 +70,14 @@ class Client:
 
 
     def start(self):
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
-            server_socket.bind(('127.0.0.1', self.port))
-            server_socket.listen()
-            print(f'Server is listening at port {self.port}')
-            connection, address = server_socket.accept()
-            with connection:
-                print(f"Connected by {address}")
-                while True:
-                    data = self.get_data(connection)
-                    if data is not None:
-                        self.run(data)
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client.connect(('127.0.0.1', self.port)) # 5.208.214.153
+        print('Connected to server')
+        self.client_socket = client
+        while True:
+            data = self.get_data()
+            if data is not None:
+                self.run(data)
 
 
 if __name__ == "__main__":

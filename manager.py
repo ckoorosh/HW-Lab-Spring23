@@ -17,15 +17,14 @@ class Manager:
         self.frame_rate = 30
         self.smoothening = 7
 
+        self.handler = Handler()
+        self.detector = Detector(MODEL_CHECKPOINT)
+        
         self.stream = cv2.VideoCapture(0)
         self.stream.set(3, self.camera_width)
         self.stream.set(4, self.camera_height)
 
-        self.detector = Detector(MODEL_CHECKPOINT)
-        self.handler = Handler()
-
     def start(self):
-        self.handler.initialize_client()
         while True:
             fingers = [0, 0, 0, 0, 0]
             # _, image = self.stream.read()
