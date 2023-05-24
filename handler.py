@@ -2,7 +2,7 @@ import socket
 import json
 from enum import Enum
 
-class Command(Enum):
+class Command(int, Enum):
     MOVE = 1
     CLICK = 2
     DOUBLE_CLICK = 3
