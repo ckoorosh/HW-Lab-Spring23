@@ -34,16 +34,13 @@ class Detector:
         bbox = xmin, ymin, xmax, ymax
 
         if draw:
-            cv2.rectangle(image, (xmin - 20, ymin - 20), (xmax + 20, ymax + 20), (0, 255, 0), 2)
+            cv2.rectangle(image, (int(xmin) - 20, int(ymin) - 20), (int(xmax) + 20, int(ymax) + 20), (0, 255, 0), 2)
             cv2.imwrite('./results/test.jpg', image)
 
         return keypoints, bbox
     
     
     def get_keypoints(self, image):
-        # image = tf.image.decode_jpeg(image, channels=3)
-        # image = tf.image.convert_image_dtype(image, tf.float32)
-        # image = tf.image.resize_with_pad(image, self.input_size, self.input_size)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB).astype(np.float32)
         image = cv2.resize(image, (self.input_size, self.input_size))
         image = image / 255.0
