@@ -25,8 +25,8 @@ class Manager:
     def start(self):
         while True:
             fingers = [0, 0, 0, 0, 0]
-            # _, image = self.stream.read()
-            image = cv2.imread(image_path)
+            _, image = self.stream.read()
+            # image = cv2.imread(image_path)
             keypoints, bbox = self.detector.process_hands(image, draw=True)
             x1, y1 = 0, 0
 
