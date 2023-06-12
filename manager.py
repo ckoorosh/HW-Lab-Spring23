@@ -5,7 +5,7 @@ from detector import *
 from handler import *
 
 
-MODEL_CHECKPOINT = './checkpoints/model.tflite'
+MODEL_CHECKPOINT = './checkpoints/hand_detector.tflite'
 
 image_path = './sample/1402.jpg'
 
@@ -33,7 +33,7 @@ class Manager:
             x1, y1 = 0, 0
 
             if len(keypoints) != 0:
-                x1, y1 = keypoints[0]
+                x1, y1 = keypoints[4]
                 print(x1, y1)
 
             fingers = self.detector.check_fingers(keypoints)

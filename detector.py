@@ -43,14 +43,16 @@ class Detector:
     def get_keypoints(self, image):
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB).astype(np.float32)
         image = cv2.resize(image, (self.input_size, self.input_size))
-        image = image / 255.0
-        image = np.expand_dims(image, axis=0)
+        # image = image / 127.5
+        # image -= 1
+        image = np.expand_dims(image, axis=0) / 255.0
 
         self.model.set_tensor(self.input_details[0]['index'], image)
         self.model.invoke()
         y_pred = self.model.get_tensor(self.output_details[0]['index'])
-        y_pred = np.squeeze(y_pred, axis=0)
-        return self.find_fingers(y_pred)
+        # y_pred = np.squeeze(y_pred, axis=0)
+        # return self.find_fingers(y_pred)
+        return np.squeeze(y_pred, axis=0).reshape(21, 3)[:, :2]
 
 
     def find_finger(self, P, X, Y, img_size=224, k=7):
@@ -92,9 +94,22 @@ class Detector:
 
 
     def check_fingers(self, points):
+        finger_tips = [4, 8, 12, 16, 20]
         fingers = []
         
-        # todo
+        if not points:
+            return [0] * 5
+
+        if points[finger_tips[0]][1] > points[finger_tips[0] - 1][1]:
+            fingers.append(1)
+        else:
+            fingers.append(0)
+
+        for id in range(1, 5):
+            if points[finger_tips[id]][2] < points[finger_tips[id] - 2][2]:
+                fingers.append(1)
+            else:
+                fingers.append(0)
 
         return fingers
         

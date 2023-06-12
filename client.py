@@ -1,12 +1,12 @@
 import pyautogui
-from enum import Enum
+from enum import IntEnum
 import numpy as np
 from tkinter import messagebox
 import socket
 import json
 
 
-class Command(Enum):
+class Command(IntEnum):
     MOVE = 1
     CLICK = 2
     DOUBLE_CLICK = 3
@@ -71,7 +71,7 @@ class Client:
 
     def start(self):
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client.connect(('127.0.0.1', self.port)) # 5.208.214.153
+        client.connect(('192.168.114.23', self.port)) # 5.208.214.153
         print('Connected to server')
         self.client_socket = client
         while True:
