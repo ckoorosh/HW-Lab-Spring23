@@ -97,7 +97,7 @@ class Detector:
         finger_tips = [4, 8, 12, 16, 20]
         fingers = [0, 0, 0, 0, 0]
         
-        if points == None:
+        if not points.any():
             return fingers
 
         if points[finger_tips[0]][1] > points[finger_tips[0] - 1][1]:
