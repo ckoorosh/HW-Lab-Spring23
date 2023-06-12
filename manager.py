@@ -26,20 +26,20 @@ class Manager:
         while True:
             fingers = [0, 0, 0, 0, 0]
             success, image = self.stream.read()
-            print(success)
+            # print(success, image, self.stream)
             # image = cv2.imread(image_path)
             keypoints, bbox = self.detector.process_hands(image, draw=True)
             x1, y1 = 0, 0
 
-            if len(keypoints) != 0:
+            if len(keypoints) > 0:
                 x1, y1 = keypoints[4]
                 print(x1, y1)
 
             fingers = self.detector.check_fingers(keypoints)
-            fingers = [0, 1, 0, 0, 0]
+            print(fingers)
             self.handler.handle_gesture(fingers, co1=(x1, y1))
 
-            break
+            # break
 
 
 if __name__ == "__main__":

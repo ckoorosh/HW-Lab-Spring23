@@ -35,41 +35,41 @@ class Handler:
         # move mouse
         if gesture == [0, 1, 0, 0, 0]:
             data = {'type': Command.MOVE, 'x': float(co1[0]), 'y': float(co1[1])}
-            self.client.send(json.dumps(data).encode('utf-8'))
+            self.client.send((json.dumps(data) + '\0').encode('utf-8'))
             print("Move mouse case")
+            self.clicked = False
+            self.right_clicked = False
+            self.double_clicked = False
         # click
         elif gesture == [0, 1, 1, 0, 0]:
             if not self.clicked:
                 data = {'type': Command.CLICK}
-                self.client.send(json.dumps(data).encode('utf-8'))
+                self.client.send((json.dumps(data) + '\0').encode('utf-8'))
                 print("Click case")
-            else:
-                self.clicked = False
+                self.clicked = True
         # double click
         elif gesture == [1, 1, 0, 0, 0]:
             if not self.double_clicked:
                 data = {'type': Command.DOUBLE_CLICK}
-                self.client.send(json.dumps(data).encode('utf-8'))
+                self.client.send((json.dumps(data) + '\0').encode('utf-8'))
                 print("Double click case")
-            else:
-                self.double_clicked = False
+                self.double_clicked = True
         # right click
         elif gesture == [1, 1, 1, 0, 0]:
             if not self.right_clicked:
                 data = {'type': Command.RIGHT_CLICK}
-                self.client.send(json.dumps(data).encode('utf-8'))
+                self.client.send((json.dumps(data) + '\0').encode('utf-8'))
                 print("Right click case")
-            else:
-                self.right_clicked = False
+                self.right_clicked = True
         # scroll
         elif gesture == [1, 1, 1, 1, 1]:
             if self.last_scroll == -1:
                 self.last_scroll = co1[1]
-            elif abs(last_pos_scroll - co1[1]) > 10:
+            elif abs(self.last_scroll - co1[1]) > 10:
                     offset = int((self.last_scroll - co1[1]))
-                    last_pos_scroll = co1[1]
+                    self.last_scroll = co1[1]
                     data = {'type': Command.SCROLL, 'offset': offset}
-                    self.client.send(json.dumps(data).encode('utf-8'))
+                    self.client.send((json.dumps(data) + '\0').encode('utf-8'))
                     print("Scroll case")
         else:
             self.last_scroll = -1

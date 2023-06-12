@@ -29,13 +29,17 @@ class Detector:
                 cv2.circle(image, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
 
         bbox = []
-        xmin, xmax = min(keypoints[:, 0]), max(keypoints[:, 0])
-        ymin, ymax = min(keypoints[:, 1]), max(keypoints[:, 1])
-        bbox = xmin, ymin, xmax, ymax
+        if keypoints.any():
+            xmin, xmax = min(keypoints[:, 0]), max(keypoints[:, 0])
+            ymin, ymax = min(keypoints[:, 1]), max(keypoints[:, 1])
+            bbox = xmin, ymin, xmax, ymax
 
         if draw:
-            cv2.rectangle(image, (int(xmin) - 20, int(ymin) - 20), (int(xmax) + 20, int(ymax) + 20), (0, 255, 0), 2)
-            cv2.imwrite('./results/test.jpg', image)
+            if keypoints.any():
+                cv2.rectangle(image, (int(xmin) - 20, int(ymin) - 20), (int(xmax) + 20, int(ymax) + 20), (0, 255, 0), 2)
+            # cv2.imwrite('./results/test.jpg', image)
+            cv2.imshow("My Hand", image)
+            cv2.waitKey(1)
 
         return keypoints, bbox
     
@@ -50,6 +54,9 @@ class Detector:
         self.model.set_tensor(self.input_details[0]['index'], image)
         self.model.invoke()
         y_pred = self.model.get_tensor(self.output_details[0]['index'])
+        confidence = self.model.get_tensor(self.output_details[1]['index'])
+        if confidence < 0.5:
+            return np.array([])
         # y_pred = np.squeeze(y_pred, axis=0)
         # return self.find_fingers(y_pred)
         return np.squeeze(y_pred, axis=0).reshape(21, 3)[:, :2]
@@ -95,12 +102,12 @@ class Detector:
 
     def check_fingers(self, points):
         finger_tips = [4, 8, 12, 16, 20]
-        fingers = [0, 0, 0, 0, 0]
+        fingers = []
         
-        if not points.any():
-            return fingers
+        if len(points) == 0:
+            return [0, 0, 0, 0, 0]
 
-        if points[finger_tips[0]][0] > points[finger_tips[0] - 1][0]:
+        if points[finger_tips[0]][0] < points[finger_tips[0] - 1][0]:
             fingers.append(1)
         else:
             fingers.append(0)
