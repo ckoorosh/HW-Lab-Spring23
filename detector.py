@@ -95,10 +95,10 @@ class Detector:
 
     def check_fingers(self, points):
         finger_tips = [4, 8, 12, 16, 20]
-        fingers = []
+        fingers = [0, 0, 0, 0, 0]
         
-        if not points:
-            return [0] * 5
+        if points == None:
+            return fingers
 
         if points[finger_tips[0]][1] > points[finger_tips[0] - 1][1]:
             fingers.append(1)
