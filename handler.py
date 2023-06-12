@@ -34,7 +34,7 @@ class Handler:
     def handle_gesture(self, gesture, co1=(0, 0)):
         # move mouse
         if gesture == [0, 1, 0, 0, 0]:
-            data = {'type': Command.MOVE, 'x': co1[0], 'y': co1[1]}
+            data = {'type': Command.MOVE, 'x': float(co1[0]), 'y': float(co1[1])}
             self.client.send(json.dumps(data).encode('utf-8'))
             print("Move mouse case")
         # click
