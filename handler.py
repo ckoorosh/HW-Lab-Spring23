@@ -23,7 +23,7 @@ class Handler:
 
     def initialize_server(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
-            server_socket.bind(('192.168.207.23', self.port))
+            server_socket.bind(('192.168.114.23', self.port))
             server_socket.listen(1)
             print(f'Server is listening at port {self.port}')
             connection, address = server_socket.accept()
