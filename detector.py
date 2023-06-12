@@ -100,13 +100,13 @@ class Detector:
         if not points.any():
             return fingers
 
-        if points[finger_tips[0]][1] > points[finger_tips[0] - 1][1]:
+        if points[finger_tips[0]][0] > points[finger_tips[0] - 1][0]:
             fingers.append(1)
         else:
             fingers.append(0)
 
-        for id in range(1, 5):
-            if points[finger_tips[id]][2] < points[finger_tips[id] - 2][2]:
+        for i in range(1, 5):
+            if points[finger_tips[i]][1] < points[finger_tips[i] - 2][1]:
                 fingers.append(1)
             else:
                 fingers.append(0)

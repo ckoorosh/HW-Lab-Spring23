@@ -14,8 +14,6 @@ class Manager:
     def __init__(self) -> None:
         self.camera_width = 224
         self.camera_height = 224
-        self.frame_rate = 30
-        self.smoothening = 7
 
         self.handler = Handler()
         self.detector = Detector(MODEL_CHECKPOINT)
