@@ -74,10 +74,16 @@ class Client:
         client.connect(('192.168.114.23', self.port)) # 5.208.214.153
         print('Connected to server')
         self.client_socket = client
+        recv_buffer = ""
         while True:
-            data = self.get_data()
-            if data is not None:
-                self.run(data)
+            data = self.client_socket.recv(1024).decode()
+            recv_buffer = recv_buffer + data
+            commands = recv_buffer.split('\0')
+            for command in commands[:-1]:
+                if command:
+                    print(command)
+                    self.run(json.loads(command))
+            recv_buffer = commands[-1]
 
 
 if __name__ == "__main__":
