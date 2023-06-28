@@ -38,7 +38,6 @@ class Manager:
             fingers = self.detector.check_fingers(keypoints)
             print(fingers)
             self.handler.handle_gesture(fingers, co1=(x1, y1))
-
             # break
 
 

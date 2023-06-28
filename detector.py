@@ -107,7 +107,7 @@ class Detector:
         if len(points) == 0:
             return [0, 0, 0, 0, 0]
 
-        if points[finger_tips[0]][0] < points[finger_tips[0] - 1][0]:
+        if points[finger_tips[0]][0] > points[finger_tips[0] - 1][0]:
             fingers.append(1)
         else:
             fingers.append(0)
