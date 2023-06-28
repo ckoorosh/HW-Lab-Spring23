@@ -4,6 +4,7 @@ import numpy as np
 from tkinter import messagebox
 import socket
 import json
+import time
 
 
 class Command(IntEnum):
@@ -12,6 +13,7 @@ class Command(IntEnum):
     DOUBLE_CLICK = 3
     RIGHT_CLICK = 4
     SCROLL_UP = 5
+    SCREENSHOT = 6
 
 
 class Client:
@@ -22,7 +24,7 @@ class Client:
         self.screen_width, self.screen_height = pyautogui.size()
         self.x_mid = self.screen_width // 2
         self.y_mid = self.screen_height // 2
-        self.smoothening = 7
+        self.smoothening = 1
         self.frame_rate = 30
         pyautogui.PAUSE = 0.02
         # self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -57,21 +59,23 @@ class Client:
                 self.move_curser(data['x'], data['y'])
             elif data['type'] == Command.CLICK:
                 pyautogui.click()
-                messagebox.showinfo("Clicked", "You clicked!")
+                # messagebox.showinfo("Clicked", "You clicked!")
             elif data['type'] == Command.DOUBLE_CLICK:
                 pyautogui.doubleClick()
             elif data['type'] == Command.RIGHT_CLICK:
                 pyautogui.rightClick()
-            elif data['type'] == Command.SCROLL_UP:
-                offset = -int(data['offset']) * 10
-                pyautogui.scroll(offset)
+            elif data['type'] == Command.SCREENSHOT:
+                # offset = -int(data['offset']) * 10
+                # pyautogui.scroll(offset)
+                print('Screenshot Saved!')
+                pyautogui.screenshot(f'screenshot-{time.time()}.jpg')
         else:
             pass
 
 
     def start(self):
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client.connect(('192.168.114.23', self.port)) # 5.208.214.153
+        client.connect(('192.168.148.23', self.port)) # 5.208.214.153
         print('Connected to server')
         self.client_socket = client
         recv_buffer = ""
