@@ -75,7 +75,7 @@ class Client:
 
     def start(self):
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client.connect(('192.168.148.23', self.port)) # 5.208.214.153
+        client.connect(('192.168.19.23', self.port)) # 5.208.214.153
         print('Connected to server')
         self.client_socket = client
         recv_buffer = ""
