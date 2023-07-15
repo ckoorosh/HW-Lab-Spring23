@@ -8,6 +8,7 @@ class Command(IntEnum):
     DOUBLE_CLICK = 3
     RIGHT_CLICK = 4
     SCROLL = 5
+    SCREENSHOT = 6
 
 
 class Handler:
@@ -17,13 +18,14 @@ class Handler:
         self.clicked = False
         self.right_clicked = False
         self.double_clicked = False
+        self.screenshot = False
         self.last_scroll = -1
         self.initialize_server()
 
 
     def initialize_server(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
-            server_socket.bind(('192.168.114.23', self.port))
+            server_socket.bind(('192.168.148.23', self.port))
             server_socket.listen(1)
             print(f'Server is listening at port {self.port}')
             connection, address = server_socket.accept()
@@ -40,6 +42,7 @@ class Handler:
             self.clicked = False
             self.right_clicked = False
             self.double_clicked = False
+            self.screenshot = False
         # click
         elif gesture == [0, 1, 1, 0, 0]:
             if not self.clicked:
@@ -63,14 +66,14 @@ class Handler:
                 self.right_clicked = True
         # scroll
         elif gesture == [1, 1, 1, 1, 1]:
-            if self.last_scroll == -1:
-                self.last_scroll = co1[1]
-            elif abs(self.last_scroll - co1[1]) > 10:
-                    offset = int((self.last_scroll - co1[1]))
-                    self.last_scroll = co1[1]
-                    data = {'type': Command.SCROLL, 'offset': offset}
-                    self.client.send((json.dumps(data) + '\0').encode('utf-8'))
-                    print("Scroll case")
-        else:
-            self.last_scroll = -1
+            if not self.screenshot:
+                data = {'type': Command.SCREENSHOT}
+                self.client.send((json.dumps(data) + '\0').encode('utf-8'))
+                self.screenshot = True
+            # elif abs(self.last_scroll - co1[1]) > 10:
+                   # offset = int((self.last_scroll - co1[1]))
+                   # self.last_scroll = co1[1]
+                   # data = {'type': Command.SCROLL, 'offset': offset}
+                   # self.client.send((json.dumps(data) + '\0').encode('utf-8'))
+                   # print("Scroll case")
 
